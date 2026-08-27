@@ -1,5 +1,6 @@
 import "./globals.css";
 import "./visual-overrides.css";
+import "./brand-fix.css";
 
 export const metadata = {
   title: "Sniff and Fun Challenge",
