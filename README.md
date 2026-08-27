@@ -12,7 +12,7 @@ Git, dans le navigateur ou dans une variable `NEXT_PUBLIC_*`.
 
 ## Base Supabase
 
-La migration `supabase/migrations/20260827213000_harden_existing_security.sql`
+La migration `supabase/migrations/20260827215447_harden_existing_security.sql`
 renforce progressivement la base existante sans recréer ses tables ni modifier
 les données métier. Sur une base existante, comparez impérativement le schéma
 distant avant application :
