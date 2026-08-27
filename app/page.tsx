@@ -22,7 +22,10 @@ export default function Page() {
   return (
     <main className="shell">
       <aside className="sidebar">
-        <div className="brand">Dog Challenge 🐾</div>
+        <div className="brand-block">
+          <div className="brand-mark">👃</div>
+          <div className="brand-copy"><strong>DÉTECTION D’ODEURS</strong><span>CHALLENGE</span></div>
+        </div>
         <nav>
           <NavButton active={screen === "home"} onClick={() => go("home")} icon={<Home size={19}/>} label="Accueil" />
           <NavButton active={screen === "challenges"} onClick={() => go("challenges")} icon={<Target size={19}/>} label="Défis" />
@@ -50,12 +53,19 @@ export default function Page() {
 function NavButton({active, onClick, icon, label}: any) { return <button className={`nav-btn ${active ? "active" : ""}`} onClick={onClick}>{icon}<span>{label}</span></button>; }
 
 function HomeScreen({progress, completed, total, onChallenges}: any) {
-  return <><header><p className="eyebrow">TABLEAU DE BORD</p><h1>Salut 👋</h1><p>Prêt pour une nouvelle recherche avec ton chien?</p></header><div className="grid">
-    <article className="hero-card"><div><span className="pill">Niveau 1 · Débutant</span><h2>Progression</h2><div className="big-number">{progress}%</div><p>{completed} défis réussis sur {total}</p><div className="progress"><span style={{width: `${progress}%`}} /></div><button className="primary wide" onClick={onChallenges}>Voir mes défis</button></div></article>
-    <article className="card"><h3>Défi hebdomadaire</h3><p className="muted">3 recherches à compléter cette semaine.</p><div className="weekly-bars"><span/><span/><span/></div><p><strong>0 / 3</strong> recherche complétée</p></article>
-    <article className="card"><h3>Prochain niveau</h3><p>Complète les 12 défis du niveau 1 pour débloquer le niveau 2.</p><div className="lock-box"><Lock size={24}/> Niveau 2 verrouillé</div></article>
-    <article className="card"><h3>Catégories</h3><p>🏠 5 défis intérieur</p><p>🌲 5 défis extérieur</p><p>👥 2 défis en lieu public</p></article>
-  </div></>;
+  return <>
+    <section className="brand-hero">
+      <img src="/detection-hero.webp" alt="Chien qui renifle un contenant d'odeur dans un salon, avec une femme heureuse en arrière-plan" />
+      <div className="hero-overlay"><span className="hero-kicker">SENTEZ. CHERCHEZ. RÉUSSISSEZ.</span><h1>Détection d’odeurs Challenge</h1><p>Des défis progressifs pour développer l’autonomie, la précision et le plaisir de chercher avec votre chien.</p><button className="accent-button" onClick={onChallenges}>Commencer un défi</button></div>
+    </section>
+    <header className="dashboard-header"><p className="eyebrow">TABLEAU DE BORD</p><h2>Prêt pour une nouvelle recherche?</h2></header>
+    <div className="grid">
+      <article className="hero-card"><div><span className="pill">Niveau 1 · Débutant</span><h2>Progression</h2><div className="big-number">{progress}%</div><p>{completed} défis réussis sur {total}</p><div className="progress"><span style={{width: `${progress}%`}} /></div><button className="accent-button wide" onClick={onChallenges}>Voir mes défis</button></div></article>
+      <article className="card weekly-card"><h3>Défi hebdomadaire</h3><p className="muted">3 recherches à compléter cette semaine.</p><div className="weekly-bars"><span/><span/><span/></div><p><strong>0 / 3</strong> recherche complétée</p></article>
+      <article className="card"><h3>Prochain niveau</h3><p>Complète les 12 défis du niveau 1 pour débloquer le niveau 2.</p><div className="lock-box"><Lock size={24}/> Niveau 2 verrouillé</div></article>
+      <article className="card"><h3>Catégories</h3><p>🏠 5 défis intérieur</p><p>🌲 5 défis extérieur</p><p>👥 2 défis en lieu public</p></article>
+    </div>
+  </>;
 }
 
 function ChallengesScreen({grouped, onSelect}: any) {
@@ -74,7 +84,7 @@ function ChallengeDetail({challenge, onBack}: {challenge: Challenge, onBack: () 
     {challenge.steps && <DetailSection title="Déroulement"><ol className="numbered-list">{challenge.steps.map(item => <li key={item}>{item}</li>)}</ol></DetailSection>}
     <div className="instruction-box"><h3>Critères de réussite</h3>{(challenge.successCriteria || ["Le chien identifie correctement la cache.", "La recherche est terminée avant la fin du temps."]).map(item => <p key={item}>✓ {item}</p>)}</div>
     <div className="timer-label">Chronomètre · maximum {formatDuration(challenge.duration)}</div><Timer seconds={challenge.duration} />
-    <div className="result-actions"><button className="primary" onClick={() => setResult("success")}>✓ Défi réussi</button><button className="secondary" onClick={() => setResult("retry")}>À reprendre</button></div>
+    <div className="result-actions"><button className="accent-button" onClick={() => setResult("success")}>✓ Défi réussi</button><button className="secondary" onClick={() => setResult("retry")}>À reprendre</button></div>
     {result && <div className={`result-message ${result}`}>{result === "success" ? "Bravo! Le défi est marqué comme réussi pour ce test." : "Pas de problème. Tu pourras reprendre ce défi quand tu veux."}<small> L'enregistrement permanent sera ajouté avec les comptes utilisateurs.</small></div>}
   </div></>;
 }
@@ -83,14 +93,7 @@ function DetailSection({title, icon, children}: {title: string, icon?: React.Rea
 function formatDuration(seconds: number) { const minutes = Math.floor(seconds / 60); const rest = seconds % 60; return rest ? `${minutes} min ${rest} s` : `${minutes} min`; }
 
 function LexiconScreen() {
-  const words = [
-    ["Source", "Endroit précis où se trouve l'odeur cible."],
-    ["Cache", "Emplacement choisi pour placer l'odeur ou la nourriture pendant l'exercice."],
-    ["Conducteur", "Personne qui accompagne le chien pendant la recherche."],
-    ["Marquer verbalement", "Utiliser un mot précis, par exemple « YES », pour indiquer au chien qu'il vient d'effectuer le comportement recherché."],
-    ["Leurrer", "Guider temporairement le chien avec une récompense, notamment pour l'éloigner de la source après la récompense."],
-    ["Odeur cible", "Odeur que le chien a appris à rechercher et à identifier."]
-  ];
+  const words = [["Source", "Endroit précis où se trouve l'odeur cible."],["Cache", "Emplacement choisi pour placer l'odeur ou la nourriture pendant l'exercice."],["Conducteur", "Personne qui accompagne le chien pendant la recherche."],["Marquer verbalement", "Utiliser un mot précis, par exemple « YES », pour indiquer au chien qu'il vient d'effectuer le comportement recherché."],["Leurrer", "Guider temporairement le chien avec une récompense, notamment pour l'éloigner de la source après la récompense."],["Odeur cible", "Odeur que le chien a appris à rechercher et à identifier."]];
   return <><header><p className="eyebrow">RÉFÉRENCE</p><h1>Lexique</h1><p>Les mots importants utilisés dans les défis de détection d'odeurs.</p></header><div className="lexicon-grid">{words.map(([word, definition]) => <article className="card" key={word}><h3>{word}</h3><p className="muted">{definition}</p></article>)}</div></>;
 }
 
