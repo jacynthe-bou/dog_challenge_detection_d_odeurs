@@ -1,8 +1,8 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Dog Challenge",
-  description: "Défis de détection d'odeurs pour chiens"
+  title: "Sniff and Fun Challenge",
+  description: "Défi de détection d'odeurs pour chiens"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
