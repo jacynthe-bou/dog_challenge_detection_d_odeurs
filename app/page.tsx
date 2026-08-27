@@ -22,9 +22,8 @@ export default function Page() {
   return (
     <main className="shell">
       <aside className="sidebar">
-        <div className="brand-block">
-          <div className="brand-mark">👃</div>
-          <div className="brand-copy"><strong>DÉTECTION D’ODEURS</strong><span>CHALLENGE</span></div>
+        <div className="brand-block" style={{padding: 0, overflow: "hidden", background: "#fff"}}>
+          <img src="/brand-logo.webp" alt="Logo Détection d’odeurs Challenge" style={{width: "100%", display: "block", borderRadius: 14}} />
         </div>
         <nav>
           <NavButton active={screen === "home"} onClick={() => go("home")} icon={<Home size={19}/>} label="Accueil" />
@@ -55,7 +54,7 @@ function NavButton({active, onClick, icon, label}: any) { return <button classNa
 function HomeScreen({progress, completed, total, onChallenges}: any) {
   return <>
     <section className="brand-hero">
-      <img src="/detection-hero.webp" alt="Chien qui renifle un contenant d'odeur dans un salon, avec une femme heureuse en arrière-plan" />
+      <img src="/detection-hero.jpg" alt="Chien qui renifle un contenant d'odeur dans un salon, avec une femme heureuse en arrière-plan" />
       <div className="hero-overlay"><span className="hero-kicker">SENTEZ. CHERCHEZ. RÉUSSISSEZ.</span><h1>Détection d’odeurs Challenge</h1><p>Des défis progressifs pour développer l’autonomie, la précision et le plaisir de chercher avec votre chien.</p><button className="accent-button" onClick={onChallenges}>Commencer un défi</button></div>
     </section>
     <header className="dashboard-header"><p className="eyebrow">TABLEAU DE BORD</p><h2>Prêt pour une nouvelle recherche?</h2></header>
