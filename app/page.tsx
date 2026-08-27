@@ -21,9 +21,8 @@ export default function Page() {
   return (
     <main className="shell">
       <aside className="sidebar">
-        <div className="brand-block">
-          <div className="mini-logo"><PawPrint size={28}/></div>
-          <div className="brand-copy"><strong>Sniff <em>and Fun</em></strong><span>CHALLENGE</span></div>
+        <div className="brand-block brand-image-block">
+          <img src="/brand-logo.jpg" alt="Sniff and Fun Challenge" className="sidebar-logo" />
         </div>
         <nav>
           <NavButton active={screen === "home"} onClick={() => go("home")} icon={<Home size={19}/>} label="Accueil" />
@@ -60,10 +59,10 @@ function NavButton({active, onClick, icon, label}: any) { return <button classNa
 function HomeScreen({progress, completed, total, onChallenges, onSelect}: any) {
   const featured = challenges.slice(0,2);
   return <div className="dashboard">
-    <section className="brand-hero">
-      <img src="/detection-hero.jpg" alt="Chien qui renifle un contenant d'odeur dans un salon, avec une femme heureuse en arrière-plan" />
-      <div className="hero-copy">
-        <div className="hero-logo-line"><span className="odor-mark">〰</span><div><strong>Sniff <em>and Fun</em></strong><b>CHALLENGE</b></div></div>
+    <section className="brand-hero sniff-fun-hero">
+      <img src="/sniff-fun-hero.jpg" alt="Sniff and Fun Challenge — chien reniflant un contenant d’odeur dans un salon avec une femme heureuse en arrière-plan" />
+      <div className="hero-copy hero-copy-light">
+        <div className="hero-brand-name">Sniff and Fun <span>Challenge</span></div>
         <h1>Défi de détection d’odeurs<br/>pour chiens.</h1>
         <p>Des défis progressifs, simples et motivants à pratiquer à la maison avec votre chien.</p>
         <button className="accent-button" onClick={onChallenges}>Commencer un défi</button>
