@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
-const migrationPath = "supabase/migrations/20260827213000_harden_existing_security.sql";
+const migrationPath = "supabase/migrations/20260827215447_harden_existing_security.sql";
 
 test("le client ne contient aucun secret ni fallback Supabase", async () => {
   const source = await read("lib/supabase.ts");
