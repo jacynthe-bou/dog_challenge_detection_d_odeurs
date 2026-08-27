@@ -1,0 +1,14 @@
+project_id = "sniff-and-fun-challenge"
+
+[api]
+enabled = true
+schemas = ["public", "storage"]
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/**"]
+
+[storage]
+enabled = true
+file_size_limit = "5MiB"
