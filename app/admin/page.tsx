@@ -39,7 +39,7 @@ export default function AdminPage(){
 
   useEffect(()=>{
     if(!supabase){setMessage(supabaseConfigurationError||"Configuration Supabase invalide.");setAuthLoading(false);return}
-    supabase.auth.getUser().then(({data,error})=>{if(error)setMessage(formatError(error));if(data.user){setUser(data.user);void checkAdmin(data.user.id)}}).catch(error=>setMessage(formatError(error))).finally(()=>setAuthLoading(false));
+    supabase.auth.getUser().then(({data,error})=>{if(error&&!/auth session missing/i.test(error.message))setMessage(formatError(error));if(data.user){setUser(data.user);void checkAdmin(data.user.id)}}).catch(error=>{if(!/auth session missing/i.test(String(error?.message||error)))setMessage(formatError(error))}).finally(()=>setAuthLoading(false));
     const {data:{subscription}}=supabase.auth.onAuthStateChange((_e,session)=>{setUser(session?.user||null);if(session?.user)checkAdmin(session.user.id);else setIsAdmin(false)});
     return()=>subscription.unsubscribe();
   },[]);
@@ -63,6 +63,17 @@ export default function AdminPage(){
   }
 
   async function login(e:React.FormEvent){e.preventDefault();if(!supabase)return;setBusy(true);setMessage("Connexion…");try{const {error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;setMessage("Connecté.")}catch(error){setMessage(formatError(error))}finally{setBusy(false)}}
+  async function resetPassword(){
+    if(!supabase)return;
+    if(!email.trim()){setMessage("Entre d’abord ton adresse courriel, puis clique sur Mot de passe oublié ?");return}
+    setBusy(true);setMessage("Envoi du courriel de récupération…");
+    try{
+      const redirectTo=`${window.location.origin}/admin/reset-password`;
+      const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo});
+      if(error)throw error;
+      setMessage("Courriel de récupération envoyé. Ouvre le courriel reçu et clique sur le lien pour choisir un nouveau mot de passe.");
+    }catch(error){setMessage(formatError(error))}finally{setBusy(false)}
+  }
   async function logout(){if(!supabase)return;setBusy(true);try{const {error}=await supabase.auth.signOut();if(error)throw error;setMessage("")}catch(error){setMessage(formatError(error))}finally{setBusy(false)}}
 
   async function saveSettings(){
@@ -93,7 +104,7 @@ export default function AdminPage(){
   }
 
   if(authLoading)return <AdminShell><div className="login-card"><h1>Administration</h1><p>Vérification de la session…</p></div></AdminShell>;
-  if(!user)return <AdminShell><div className="login-card"><h1>Administration</h1><p>Connecte-toi avec un compte administrateur créé de manière sécurisée dans Supabase.</p><form onSubmit={login}><label>Courriel<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required disabled={busy}/></label><label>Mot de passe<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={8} disabled={busy}/></label><button type="submit" disabled={busy||!supabase}>{busy?"Connexion…":"Se connecter"}</button></form><p className="hint">Le premier administrateur doit être créé manuellement selon la procédure sécurisée du fichier README.</p>{message&&<p className="message" role="alert">{message}</p>}</div></AdminShell>;
+  if(!user)return <AdminShell><div className="login-card"><h1>Administration</h1><p>Connecte-toi avec un compte administrateur créé de manière sécurisée dans Supabase.</p><form onSubmit={login}><label>Courriel<input type="email" value={email} onChange={e=>setEmail(e.target.value)} required disabled={busy}/></label><label>Mot de passe<input type="password" value={password} onChange={e=>setPassword(e.target.value)} required minLength={8} disabled={busy}/></label><button type="submit" disabled={busy||!supabase}>{busy?"Connexion…":"Se connecter"}</button><button type="button" className="secondary" onClick={resetPassword} disabled={busy||!supabase}>Mot de passe oublié ?</button></form><p className="hint">Entre ton courriel puis utilise « Mot de passe oublié ? » pour recevoir un lien sécurisé de récupération.</p>{message&&<p className="message" role="alert">{message}</p>}</div></AdminShell>;
 
   if(!isAdmin)return <AdminShell><div className="login-card"><h1>Accès refusé</h1><p>Ce compte est authentifié, mais ne possède pas le rôle administrateur.</p><button onClick={logout} disabled={busy}>Déconnexion</button>{message&&<p className="message" role="alert">{message}</p>}</div></AdminShell>;
 
