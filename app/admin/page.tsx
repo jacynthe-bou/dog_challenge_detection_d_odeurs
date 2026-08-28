@@ -1,5 +1,5 @@
-import AdminPageV2 from "./AdminPageV2";
+import AdminPageV3 from "./AdminPageV3";
 
 export default function Page() {
-  return <AdminPageV2 />;
+  return <AdminPageV3 />;
 }
