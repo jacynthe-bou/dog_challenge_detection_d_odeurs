@@ -1,5 +1,5 @@
-import ChallengeAppV2 from "./ChallengeAppV2";
+import ChallengeAppV3 from "./ChallengeAppV3";
 
 export default function Page() {
-  return <ChallengeAppV2 />;
+  return <ChallengeAppV3 />;
 }
