@@ -1,10 +1,11 @@
 import "./globals.css";
 import "./visual-overrides.css";
 import "./brand-fix.css";
+import "./dashboard-polish.css";
 
 export const metadata = {
-  title: "Sniff and Fun Challenge",
-  description: "Défi de détection d'odeurs pour chiens"
+  title: "Go Sniff Challenge",
+  description: "Défis amusants de détection d’odeurs"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
