@@ -1,0 +1,1 @@
+Identité visuelle provisoire pour la branche de prévisualisation.
