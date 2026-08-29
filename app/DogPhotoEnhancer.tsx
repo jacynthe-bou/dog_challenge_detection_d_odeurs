@@ -5,22 +5,22 @@ import { supabase } from "../lib/supabase";
 
 export default function DogPhotoEnhancer(){
   useEffect(()=>{
-    if(!supabase)return;
+    const client=supabase;
+    if(!client)return;
     let formFile:File|null=null;
     let formPreview:string|null=null;
     let enhancing=false;
 
     async function uploadDogPhoto(dogId:string,file:File){
-      if(!supabase)return;
       if(!file.type.startsWith("image/")||file.size>5*1024*1024){alert("Choisis une image de moins de 5 Mo.");return;}
-      const {data:{user}}=await supabase.auth.getUser();
+      const {data:{user}}=await client.auth.getUser();
       if(!user)return;
       const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");
       const path=`dogs/${user.id}/${dogId}-${Date.now()}.${ext||"jpg"}`;
-      const {error}=await supabase.storage.from("app-media").upload(path,file,{contentType:file.type,upsert:true});
+      const {error}=await client.storage.from("app-media").upload(path,file,{contentType:file.type,upsert:true});
       if(error){alert(`Impossible d’ajouter la photo : ${error.message}`);return;}
-      const url=supabase.storage.from("app-media").getPublicUrl(path).data.publicUrl;
-      const {error:updateError}=await supabase.from("dogs").update({photo_url:url,updated_at:new Date().toISOString()}).eq("id",dogId).eq("owner_id",user.id);
+      const url=client.storage.from("app-media").getPublicUrl(path).data.publicUrl;
+      const {error:updateError}=await client.from("dogs").update({photo_url:url,updated_at:new Date().toISOString()}).eq("id",dogId).eq("owner_id",user.id);
       if(updateError){alert(`Impossible d’enregistrer la photo : ${updateError.message}`);return;}
       window.location.reload();
     }
@@ -41,17 +41,17 @@ export default function DogPhotoEnhancer(){
             const file=formFile;
             if(!name||!file)return;
             setTimeout(async()=>{
-              const {data:{user}}=await supabase.auth.getUser();if(!user)return;
-              const {data}=await supabase.from("dogs").select("id").eq("owner_id",user.id).eq("name",name).order("created_at",{ascending:false}).limit(1).maybeSingle();
+              const {data:{user}}=await client.auth.getUser();if(!user)return;
+              const {data}=await client.from("dogs").select("id").eq("owner_id",user.id).eq("name",name).order("created_at",{ascending:false}).limit(1).maybeSingle();
               if(data?.id)await uploadDogPhoto(data.id,file);
             },1200);
           });
         }
         const cards=[...document.querySelectorAll<HTMLElement>(".dog-card")];
         if(cards.length){
-          const {data:{user}}=await supabase.auth.getUser();
+          const {data:{user}}=await client.auth.getUser();
           if(user){
-            const {data:dogs}=await supabase.from("dogs").select("id,name,photo_url").eq("owner_id",user.id).order("created_at");
+            const {data:dogs}=await client.from("dogs").select("id,name,photo_url").eq("owner_id",user.id).order("created_at");
             cards.forEach((card,index)=>{
               if(card.querySelector(".dog-photo-edit"))return;
               const dog=dogs?.[index];if(!dog)return;
